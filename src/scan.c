@@ -28,13 +28,13 @@ static int bufsize = 0;      /* tamanho corrente da cadeia do repositório */
 static char getNextChar(void) {
    if (!(linepos < bufsize)) {
       lineno ++;
-      if (fgets(lineBuf, BUFLEN - 1, source) {
+      if (fgets(lineBuf, BUFLEN - 1, source)) {
          if (EchoSource) fprintf(listing, "%4d: %s", lineno, lineBuf);
 	 bufsize = strlen(lineBuf);
 	 linepos = 0;
 	 return lineBuf[linepos++];
       }
-      else return EOF
+      else return EOF;
    }
    else return lineBuf[linepos++];
 }
@@ -110,16 +110,16 @@ TokenType getToken(void) {
 		     currentToken = PLUS;
 		     break;
 		  case '-' :
-		     currentToken = MINUS:
+		     currentToken = MINUS;
 		     break;
 		  case '*' :
 		     currentToken = TIMES;
 		     break;
 		  case '/' :
-		     currentToken = OVER:
+		     currentToken = OVER;
 		     break;
 	          case '(' :
-		     currentToken = LPAREN
+		     currentToken = LPAREN;
 		     break;
 		  case ')' :
 		     currentToken = RPAREN;

@@ -8,13 +8,13 @@
 #include "globals.h"
 
 /* ajuste NO_PARSE para TRUE para um compilador que efetue apenas a varredura */
-#define NO_PARSE FALSE
+#define NO_PARSE TRUE
 
 /* ajuste NO_ANALYZE para TRUE para um compilador que efetue apenas a análise sintática */
-#define NO_ANALYZE FALSE
+#define NO_ANALYZE TRUE
 
 /* ajuste NO_CODE para TRUE para um compilador que não gere código */
-#define NO_CODE FALSE
+#define NO_CODE TRUE
 
 
 #include "util.h"
@@ -45,7 +45,7 @@ int TraceCode = TRUE;
 
 int Error = FALSE;
 
-int main(int agrc, char *argv[]) {
+int main(int argc, char *argv[]) {
    TreeNode * syntexTree;
    char pgm[20]; /*nome do arquivo de código-fonte */
    if (argc != 2) {
