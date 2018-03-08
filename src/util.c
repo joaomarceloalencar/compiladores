@@ -5,8 +5,11 @@
 /* Kenneth C. Louden                                           */
 /***************************************************************/
 
+#include "globals.h"
+#include "util.h"
+
 /* Procedimento printToken imprime um marcador e seu lexema no arquivo de listagem */
-void printToken(TokenType, const char*) {
+void printToken(TokenType token, const char* tokenString) {
    switch(token) {
       case IF:
       case THEN:
@@ -37,13 +40,13 @@ void printToken(TokenType, const char*) {
 }
 
 /* Função newStmtNode cria um novo nó de declaração ara a construção da árvore sintática */
-TreeNode *newStmtNode(StmtKind) {
+TreeNode *newStmtNode(StmtKind kind) {
    TreeNode *t = (TreeNode *) malloc(sizeof(TreeNode));
    int i;
    if (t == NULL)
       fprintf(listing, "Out of Memory error at line %d\n", lineno);
    else {
-      for (i = 0; i< MAXCHILDREN ++i) t->child[i] = NULL;
+      for (i = 0; i< MAXCHILDREN; ++i) t->child[i] = NULL;
       t->sibling = NULL;
       t->nodekind = StmtK;
       t->kind.stmt = kind;
@@ -53,7 +56,7 @@ TreeNode *newStmtNode(StmtKind) {
 }
 
 /* Função newExpNode cria um novo nó de expressão ara a construção da árvore sintática */
-TreeNode *newExpNode(ExpKind) {
+TreeNode *newExpNode(ExpKind kind) {
    TreeNode *t = (TreeNode *) malloc(sizeof(TreeNode));
    int i;
    if (t == NULL)
@@ -61,7 +64,7 @@ TreeNode *newExpNode(ExpKind) {
    else { 
       for (i = 0; i < MAXCHILDREN; i++) t->child[i] = NULL;
       t->sibling = NULL;
-      t->nodeKind = ExpK;
+      t->nodekind = ExpK;
       t->kind.exp = kind;
       t->lineno = lineno;
       t->type = Void;
@@ -70,7 +73,7 @@ TreeNode *newExpNode(ExpKind) {
 }
 
 /* Função copyString aloca e cria nova cópia de uma cadeia existente */
-char *copyString(char *) {
+char *copyString(char *s) {
    int n;
    char *t;
    if (s == NULL) return NULL;
@@ -83,7 +86,7 @@ char *copyString(char *) {
 }
 
 /* Variável indentno usada por printTree para armazenar a quantidade corrente de espaços para tabulação */
-static indentno = 0;
+static int indentno = 0;
 
 /* Macros para aumentar/diminuir a tabulação */
 #define INDENT indentno += 2
@@ -98,7 +101,7 @@ static void printSpaces(void) {
 }
 
 /* procedimento printTree imprime um árvore sintática no arquivo de listagem usando tabulação para indicar subárvores */
-void printTree(TreeNode *) {
+void printTree(TreeNode * tree) {
    int i;
    INDENT;
    while (tree != NULL) {
@@ -112,7 +115,7 @@ void printTree(TreeNode *) {
 	       fprintf(listing, "Repeat\n");
 	       break;
 	    case AssignK:
-	       fprintf(listing, "Assign to: s%\n", tree->attr.name);
+	       fprintf(listing, "Assign to: %s\n", tree->attr.name);
 	       break;
 	    case ReadK:
 	       fprintf(listing, "Read: %s\n", tree->attr.name);
@@ -134,7 +137,7 @@ void printTree(TreeNode *) {
 	       fprintf(listing, "const: %d\n", tree->attr.val);
 	       break;
 	    case IdK:
-	       fprintf(listing, "Id: s%\n", tree->attr.name);
+	       fprintf(listing, "Id: %s\n", tree->attr.name);
 	       break;
             default:
 	       fprintf(listing, "Unknown ExpNode kind\n");

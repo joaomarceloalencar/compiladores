@@ -57,11 +57,11 @@ typedef enum {Void, Integer, Boolean} ExpType;
 #define MAXCHILDREN 3
 
 typedef struct treeNode {
-   struct treenode *children[MAXCHILDREN];
+   struct treeNode *child[MAXCHILDREN];
    struct treeNode *sibling;
    int lineno;
    NodeKind nodekind;
-   union { StmtKind stmt, ExpKind exp; } kind;
+   union { StmtKind stmt; ExpKind exp; } kind;
    union {
       TokenType op;
       int val;

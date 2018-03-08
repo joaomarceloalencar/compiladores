@@ -24,7 +24,7 @@ static char lineBuf[BUFLEN]; /* preserva a linha corrente */
 static int linepos = 0;      /* posição corrente em lineBuf */
 static int bufsize = 0;      /* tamanho corrente da cadeia do repositório */
 
-/* getNextChar captura o caractere seguinte diferente de espaço em branco em lineBuf, e lê uma nova linha se linebuf tiver diso totalmente usado */
+/* getNextChar captura o caractere seguinte diferente de espaço em branco em lineBuf, e lê uma nova linha se linebuf tiver sido totalmente usado */
 static char getNextChar(void) {
    if (!(linepos < bufsize)) {
       lineno ++;
