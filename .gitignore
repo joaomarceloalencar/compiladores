@@ -56,7 +56,6 @@ dkms.conf
 *.log  
 *.nav  
 *.out  
-*.pdf  
 *.snm  
 *.tex~  
 *.toc  
