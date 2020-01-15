@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="145.37355mm"
+   height="15.231027mm"
+   viewBox="0 0 515.10313 53.968204"
+   id="svg3412"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   sodipodi:docname="ernfadfaprograma.svg"
+   inkscape:export-filename="/home/jmhal/OneDrive/Documentos/ufc/disciplinas/2018/compiladores/slides/03/figuras/ernfadfa.png"
+   inkscape:export-xdpi="90"
+   inkscape:export-ydpi="90">
+  <defs
+     id="defs3414">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lend"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4330"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(-0.8,0,0,-0.8,-10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0"
+       refX="0"
+       id="Arrow1Lstart"
+       style="overflow:visible"
+       inkscape:isstock="true">
+      <path
+         id="path4327"
+         d="M 0,0 5,-5 -12.5,0 5,5 0,0 Z"
+         style="fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke:#000000;stroke-width:1pt;stroke-opacity:1"
+         transform="matrix(0.8,0,0,0.8,10,0)"
+         inkscape:connector-curvature="0" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.2837891"
+     inkscape:cx="339.2791"
+     inkscape:cy="-68.77126"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata3417">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Camada 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-22.089378,-409.62274)">
+    <g
+       id="g4665">
+      <g
+         id="g3495">
+        <g
+           id="g3426"
+           transform="translate(0,4.2841795)">
+          <ellipse
+             ry="26.484102"
+             rx="51.410316"
+             cy="432.32266"
+             cx="73.999695"
+             id="path3420"
+             style="fill:#ffffff;stroke:#000000" />
+          <text
+             sodipodi:linespacing="125%"
+             id="text3422"
+             y="442.44894"
+             x="54.526093"
+             style="font-style:normal;font-weight:normal;font-size:30px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             xml:space="preserve"><tspan
+               y="442.44894"
+               x="54.526093"
+               id="tspan3424"
+               sodipodi:role="line">ER</tspan></text>
+        </g>
+      </g>
+      <path
+         inkscape:connector-curvature="0"
+         id="path3521"
+         d="m 126.18895,434.65948 305.34612,0"
+         style="fill:none;fill-rule:evenodd;stroke:#000000;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker-end:url(#Arrow1Lend)" />
+      <g
+         id="g3501">
+        <ellipse
+           style="fill:#ffffff;stroke:#000000"
+           id="path3420-6"
+           cx="211.09387"
+           cy="436.60684"
+           rx="51.410316"
+           ry="26.484102" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:30px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="183.62027"
+           y="446.73312"
+           id="text3422-7"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3424-5"
+             x="183.62027"
+             y="446.73312">NFA</tspan></text>
+      </g>
+      <g
+         id="g3506">
+        <ellipse
+           style="fill:#ffffff;stroke:#000000"
+           id="path3420-62"
+           cx="348.18805"
+           cy="436.60684"
+           rx="51.410316"
+           ry="26.484102" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-weight:normal;font-size:30px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+           x="316.71445"
+           y="446.73312"
+           id="text3422-9"
+           sodipodi:linespacing="125%"><tspan
+             sodipodi:role="line"
+             id="tspan3424-1"
+             x="316.71445"
+             y="446.73312">DFA</tspan></text>
+      </g>
+      <g
+         id="g3511">
+        <g
+           transform="translate(411.28252,4.2841795)"
+           id="g3426-2">
+          <ellipse
+             ry="26.484102"
+             rx="51.410316"
+             cy="432.32266"
+             cx="73.999695"
+             id="path3420-7"
+             style="fill:#ffffff;stroke:#000000" />
+          <text
+             sodipodi:linespacing="125%"
+             id="text3422-0"
+             y="433.88055"
+             x="39.726154"
+             style="font-style:normal;font-weight:normal;font-size:15px;line-height:125%;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+             xml:space="preserve"><tspan
+               y="433.88055"
+               x="39.726154"
+               id="tspan3424-9"
+               sodipodi:role="line">programa</tspan></text>
+        </g>
+      </g>
+    </g>
+  </g>
+</svg>
