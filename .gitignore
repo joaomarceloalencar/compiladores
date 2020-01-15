@@ -50,3 +50,15 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Latex temporary
+*.aux  
+*.log  
+*.nav  
+*.out  
+*.pdf  
+*.snm  
+*.tex~  
+*.toc  
+*.vrb 
+_minted-*/*

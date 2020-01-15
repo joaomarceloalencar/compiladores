@@ -1,13 +1,11 @@
 
-# Compiladores - 2018.1
+# Compiladores 
 
-Código da Disciplina de Compiladores
+Material Disciplina de Compiladores
+Professor João Marcelo Uchôa de Alencar
+Campus da UFC em Quixadá
 
-## Como executar (até o momento, análise léxica)
+## Conteúdo
 
-```bash
-git clone https://github.com/jmhal/compiladores
-cd compiladores/src
-gcc *.c -o compilador
-./compilador tiny/sample.tny
-```
+1. src/ - código de exemplo usando _Lex/Yacc/C_.
+2. slides/ - pasta com os _slides_ das aulas. 
