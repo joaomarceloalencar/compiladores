@@ -8,7 +8,7 @@
 #include "globals.h"
 
 /* ajuste NO_PARSE para TRUE para um compilador que efetue apenas a varredura */
-#define NO_PARSE TRUE
+#define NO_PARSE FALSE 
 
 /* ajuste NO_ANALYZE para TRUE para um compilador que efetue apenas a análise sintática */
 #define NO_ANALYZE TRUE
@@ -46,7 +46,7 @@ int TraceCode = TRUE;
 int Error = FALSE;
 
 int main(int argc, char *argv[]) {
-   TreeNode * syntexTree;
+   TreeNode * syntaxTree;
    char pgm[20]; /*nome do arquivo de código-fonte */
    if (argc != 2) {
       fprintf(stderr, "usage: %s <filename>\n", argv[0]);
