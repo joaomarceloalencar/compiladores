@@ -61,3 +61,4 @@ dkms.conf
 *.toc  
 *.vrb 
 _minted-*/*
+slides/02/02.pdf
