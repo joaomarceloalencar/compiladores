@@ -148,7 +148,7 @@ TokenType getToken(void);
       \begin{column}{0.5\textwidth}
          \begin{block}{Padrões}
             \begin{itemize}
-               \item Uma expressão regular $r$ é completamente definida pelo conjunto de cadeiras de caracteres com as quais ela casa;
+               \item Uma expressão regular $r$ é completamente definida pelo conjunto de cadeias de caracteres com as quais ela casa;
 	       \item linguagem gerada;
 	       \item alfabeto $\Sigma$;
 	       \item metacaracateres ou metasímbolos.
@@ -824,7 +824,7 @@ end
    \begin{itemize}
       \item Vamos repetir a criação de um analisador léxico, agora usando uma ferramenta que automatiza o processo: \textit{Lex};
       \item é um programa que recebe como entrada um arquivo contendo \textbf{expressões regulares} e \textbf{ações} associadas a cada expressão;
-      \item é gerado um procedimento \textit{yylex}, implementação de um DFA;
+      \item é gerado um procedimento \textit{yylex}, implementação de um DFA.
    \end{itemize}
 \end{frame}
 
@@ -836,7 +836,7 @@ end
       \item $[abxz]$ e  $[a-z]$ também são suportados;
       \item conjunto complementar: $[^\wedge0-9abc]$;
       \item dentro dos colchetes, a maioria dos metacaracteres perde seu \textit{status} especial;
-      \item uso de chaves para nomear expressões regulares;
+      \item uso de chaves para nomear expressões regulares.
    \end{itemize}
 \end{frame}
 
@@ -853,7 +853,7 @@ signedNad (+|-)? {nat}
 \begin{frame}[fragile]
    \frametitle{Formato de um Arquivo de Entrada Lex}
    \begin{block}{Composto por três partes:}
-   Uma coleção de \textbf{definições}, uma coleção de \textbf{regras} e uma coleção de \textbf{rotina auxiliares}
+   Uma coleção de \textbf{definições}, uma coleção de \textbf{regras} e uma coleção de \textbf{rotina auxiliares}.
    \end{block}
    \begin{minted}{bash}
 {definições}
@@ -874,7 +874,7 @@ signedNad (+|-)? {nat}
 */
 #include<stdio.h>
 int lineno = 1;
-%}
+%} 
 line .*\n
 %%
 {line} { printf("%5d %s", lineno++, yytext); }
@@ -887,12 +887,9 @@ main()
 \begin{frame}[fragile]
    \frametitle{Gerando o Programa}
    \begin{minted}{bash}
-$ lex exemplo220.lex 
-$ gcc lex.yy.c -ll -o exemplo220
-exemplo220.lex:14:1: warning: return type defaults 
-  to ‘int’ [-Wimplicit-int]
- { yylex(); return 0;}
-$ ./exemplo220 < exemplo220.lex 
+$ lex numeralinha.l 
+$ gcc lex.yy.c -o numeralinha
+$ ./numeralinha < numeralinha.l 
     1 %{
     2 /* programa Lex para adicionar números
     3    de linhas a linhas de um texto, e 
@@ -906,9 +903,9 @@ $ ./exemplo220 < exemplo220.lex
    \frametitle{Explicando a Entrada Lex}
    \begin{itemize}
       \item O que está entre os delimitadores \%\{ e \%\} é inserido no código, sem alteração;
-      \item logo em seguida definimos uma expressão regular com o nome \textit{line};
+      \item em seguida definimos uma expressão regular com o nome \textit{line};
       \item após \%\%, temos a ação a ser tomada toda vez que a entrada casar com a expressão;
-      \item \textbf{yytex} é o nome que Lex dá à cadeira que casa com a expressão;
+      \item \textbf{yytex} é o nome que Lex dá à cadeia que casa com a expressão;
       \item o código após o último \%\% é inserido ao final do código C gerado;
       \item \textbf{yylex} é o nome dado à função do DFA implementado.
    \end{itemize}
@@ -919,7 +916,7 @@ $ ./exemplo220 < exemplo220.lex
    \begin{itemize}
       \item Se um caractere ou cadeia de caracteres não casar com nenhuma expressão regular, Lex ecoará a entrada na saída;
       \item Lex sempre casa com a subcadeia mais longa;
-      \item se a subcadeia mais longa casar com duas regras, Lex seleciona a primeira regra definida;
+      \item se a subcadeia mais longa casar com duas regras, Lex seleciona a primeira regra definida.
    \end{itemize}
 
    \begin{table}
