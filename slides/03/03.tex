@@ -57,7 +57,7 @@
 \begin{frame}
    \frametitle{Introdução}
    \begin{block}{Marcas ou \textit{tokens}}
-   Sequência de caracteres que representa uma unidade de informação do programa fonte.
+   Sequência de caracteres que representam uma unidade de informação do programa fonte.
    \end{block}
    \begin{itemize}
       \item Palavras-chave;
@@ -148,7 +148,7 @@ TokenType getToken(void);
       \begin{column}{0.5\textwidth}
          \begin{block}{Padrões}
             \begin{itemize}
-               \item Uma expressão regular $r$ é completamente definida pelo conjunto de cadeiras de caracteres com as quais ela casa;
+               \item Uma expressão regular $r$ é completamente definida pelo conjunto de cadeias de caracteres com as quais ela casa;
 	       \item linguagem gerada;
 	       \item alfabeto $\Sigma$;
 	       \item metacaracateres ou metasímbolos.
@@ -386,7 +386,7 @@ identificador = letra(letra|digito)*
 
 \begin{frame}
    \frametitle{Autômatos Finitos}
-   \begin{block}{Algumas Simplificações}
+   \begin{block}{Algumas simplificações:}
       \begin{enumerate}
          \item Utilizamos números para os estados no diagrama do identificador, mas a definição não restringe o conjunto de estados a números;
 	 \item para evitar inúmeras transições, podemos usar abreviaturas de classes de caracteres se todos os membros tenham o mesmo estado origem e destino;
@@ -415,7 +415,7 @@ identificador = letra(letra|digito)*
 
 \begin{frame}
    \frametitle{Verificação à Frente}
-   \begin{block}{Programa de Varredura que implementa o Autômato}
+   \begin{block}{Programa de varredura que implementa o Autômato:}
       \begin{itemize}
          \item Ação de transição: mover caractere da entrada para o lexema da marca;
 	 \item ação de aceitação: retornar a marca, lexema e outros atributos;
@@ -534,7 +534,7 @@ end if;
 \end{frame}
 
 \begin{frame}[fragile]
-   \frametitle{Usando \textit{case/switch} para por Ordem no Caos}
+   \frametitle{Usando \textit{case/switch} para Organizar o Caos}
    \begin{itemize}
       \item Uma variável para manter o estado atual;
       \item um laço, com um primeiro \textit{case} testando o estado e outro o caractere;
@@ -562,7 +562,7 @@ if estado = 3 then aceitacao else erro;
 
 \begin{frame}[fragile]
    \frametitle{Usando \textit{case/switch} para por Ordem no Caos}
-   \tiny
+   \scriptsize
    \begin{minted}{pascal}
 estado := 1; {inicio}
 while estado = 1, 2, 3 ou 4 do
