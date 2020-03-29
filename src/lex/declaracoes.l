@@ -12,7 +12,7 @@ letra [A-Za-z]
 %%
 
 {letra}({letra}|{digito})*  { return ID;}
-[1-9][0-9]*                 { return NUM;}
+[1-9][0-9]*                 { return NUMINT;}
 [ \t\n]                     { ; }
 
 %%
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
    while (token) {
       if (token == ID) {
          printf("Identificador: %s\n", yytext);
-      } else if (token == NUM) {
+      } else if (token == NUMINT) {
          printf("Número: %s\n", yytext);
       }
       token = yylex();

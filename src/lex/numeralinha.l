@@ -1,8 +1,16 @@
 %{
-   int yylineno;
+   /* programa Lex para adicionar números
+      de linhas a linhas de um texto, e 
+      imprimir o novo texto
+   */
+   #include <stdio.h>
+   int lineno = 1;
 %}
+
+line .*\n
+
 %%
-^(.*)\n printf("%d\t%s", yylineno++, yytext); 
+{line} printf("%d\t%s", lineno++, yytext); 
 %%
 
 int yywrap(void) {
