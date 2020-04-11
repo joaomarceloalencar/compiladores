@@ -10,7 +10,7 @@
 #include "scan.h"
 #include "parse.h"
 
-static TokenType token;  /* preserva marcador corrento. */
+static TokenType token;  /* preserva marcador corrente. */
 
 /* protótipos de funções para ativações recursivas */
 static TreeNode * stmt_sequence(void);
@@ -49,7 +49,7 @@ TreeNode * stmt_sequence(void) {
       q = statement();
       if (q != NULL) {
          if (t == NULL) t = p = q;
-	 else { /* função básica do analisador sintático */
+	      else { /* função básica do analisador sintático */
             p->sibling = q;
 	    p = q;
 	 }
@@ -68,8 +68,8 @@ TreeNode * statement(void) {
       case WRITE: t = write_stmt(); break;
       default:
          printToken(token, tokenString);
-	 token = getToken();
-	 break;
+	      token = getToken();
+	      break;
    }
    return t;
 }
@@ -145,10 +145,10 @@ TreeNode * simple_exp(void) {
       TreeNode *p = newExpNode(OpK);
       if (p != NULL) {
          p->child[0] = t;
-	 p->attr.op = token;
-	 t = p;
-	 match(token);
-	 t->child[1] = term();
+	      p->attr.op = token;
+	      t = p;
+	      match(token);
+	      t->child[1] = term();
       }      
    }
    return t;   
@@ -160,40 +160,40 @@ TreeNode * term(void) {
       TreeNode *p = newExpNode(OpK);
       if (p != NULL) {
          p->child[0] = t;
-	 p->attr.op = token;
-	 t = p;
-	 match(token);
-	 t->child[1] = factor();
+	      p->attr.op = token;
+	      t = p;
+	      match(token);
+	      t->child[1] = factor();
       }      
    }
    return t;   
 }
 
-TreeNode * factor(void) {
+TreeNode *factor(void) {
    TreeNode *t = NULL;
-   switch (token) {
-      case NUM:
-         t = newExpNode(ConstK);
-	 if ((t != NULL) && (token == NUM))
-	    t->attr.val = atoi(tokenString);
-	 match(NUM);
-	 break;
-      case ID:
-         t = newExpNode(IdK);
-	 if ((t != NULL) && (token == ID)) 
-	    t->attr.name = copyString(tokenString);
-	 match(ID);
-	 break;
-      case LPAREN:
-         match(LPAREN);
-	 t = exp();
-	 match(RPAREN);
-	 break;
-      default:
-         syntaxError("unexpected token -> ");
-	 printToken(token, tokenString);
-	 token = getToken();
-	 break;
+   switch (token)  {
+   case NUM:
+      t = newExpNode(ConstK);
+      if ((t != NULL) && (token == NUM))
+         t->attr.val = atoi(tokenString);
+      match(NUM);
+      break;
+   case ID:
+      t = newExpNode(IdK);
+      if ((t != NULL) && (token == ID))
+         t->attr.name = copyString(tokenString);
+      match(ID);
+      break;
+   case LPAREN:
+      match(LPAREN);
+      t = exp();
+      match(RPAREN);
+      break;
+   default:
+      syntaxError("unexpected token -> ");
+      printToken(token, tokenString);
+      token = getToken();
+      break;
    }
    return t;
 }

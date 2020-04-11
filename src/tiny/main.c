@@ -8,7 +8,7 @@
 #include "globals.h"
 
 /* ajuste NO_PARSE para TRUE para um compilador que efetue apenas a varredura */
-#define NO_PARSE TRUE 
+#define NO_PARSE FALSE 
 
 /* ajuste NO_ANALYZE para TRUE para um compilador que efetue apenas a análise sintática */
 #define NO_ANALYZE TRUE
@@ -38,8 +38,8 @@ FILE *code;
 
 /* alocação e ajuste de marcadores de acompanhamento da execução */
 int EchoSource = FALSE;
-int TraceScan = TRUE;
-int TraceParse = FALSE;
+int TraceScan = FALSE;
+int TraceParse = TRUE;
 int TraceAnalyze = FALSE;
 int TraceCode = FALSE;
 
