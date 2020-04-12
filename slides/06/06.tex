@@ -397,7 +397,7 @@ $ SímboloInicial                $ aceita
    \frametitle{Exemplo de Eliminação de Ambiguidade}
    Considere a gramática: \\
    \\
-   $\textit{declaração}\to \textit{if-stmt}|\textbf{outra}$ \\
+   $\textit{declaração}\to \textit{if-decl}|\textbf{outra}$ \\
    $\textit{if-decl} \to \textbf{if}(exp) \textit{declaração}$ \\
    $|\textbf{if}(exp)\textit{declaração }\textbf{else }\textit{declaração}$ \\
    $exp\to\textbf{0}|\textbf{1}$ \\
@@ -627,47 +627,191 @@ $ SímboloInicial                $ aceita
 \end{frame}
 
 \section{YACC}
-\begin{frame}[fragile]
+
+\begin{frame}
    \frametitle{YACC - \textit{Yet Another Compiler Compiler}}
    \begin{block}{Gerador de Analisadores Sintáticos}
-   Programa que recebe como entrada uma especificação da sintaxe de uma linguagem e produz como saída um procedimento de análise sintática para aquela linguagem. \\
-   \$ sudo apt install bison
+      Programa que recebe como entrada uma especificação da sintaxe de uma linguagem e produz como saída um procedimento de análise sintática para aquela linguagem. \\ 
    \end{block}
-   Arquivos \textbf{.y}:
-   \begin{minted}{bash}
-   {definições}
-   %%
-   {regras}
-   %%
-   {rotinas auxiliares}
+   \begin{itemize}
+      \item \textbf{Compilador de compiladores};
+      \item algoritmo LALR(1);
+      \item Várias versões;
+      \item funciona com C/C++.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{YACC - \textit{Yet Another Compiler Compiler}}
+   \begin{block}{Instalar a versão Ubuntu:}
+      \$ sudo apt install bison
+   \end{block}
+   \begin{block}{Arquivos de especificação \textbf{.y} com a gramática e ações:}
+      \begin{minted}{bash}
+      {definições}
+      %%
+      {regras}
+      %%
+      {rotinas auxiliares}
+      \end{minted}
+   \end{block}
+   São gerados os arquivos \textit{y.tab.c} e \textit{y.tab.h} para arquivo de entrada da gramática.
+\end{frame}
+
+   \begin{frame}
+   \frametitle{Definições}
+   \begin{itemize}
+      \item Marcas e tipos de dados necessários para a geração do analisador sintático;
+      \item as marcas são constantes inteiras definidas que devem corresponder às marcas geradas pelo analisador léxico;
+      \item você pode recortar e colar essas marcas nos dois cabeçalhos, ou incluir o arquivo de cabeçalho gerado pelo \textit{yacc} nos arquivos gerados pelo \textit{lex}.
+      \item também nesta seção está o código em C que deve ser inserido diretamente no analisador sintático:
+      \begin{itemize}
+         \item funções auxiliares;
+         \item diretivas \#include.
+      \end{itemize}
+      \item toda a seção de Definições pode estar vazia se o objetivo for apenas estudar a geração da tabela.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Regras}
+   \begin{itemize}
+      \item São as regras da gramática em BNF adaptada;
+      \item para cada regra pode existir uma \textbf{ação} associada:
+      \begin{itemize}
+         \item ações são código em C que é executado toda vez que o analisador LALR(1) realiza uma \textbf{redução} na regra associada;
+         \item em teoria esse código pode ser qualquer coisa, inclusive a construção de uma árvore sintática.
+      \end{itemize}
+      \item como não há o símbolo $\rightarrow$ na maioria dos teclados, usamos : em seu lugar;
+      \item a regra gramatical termina sempre com ponto e vírgula. 
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Rotinas Auxiliares}
+   \begin{itemize}
+      \item Rotinas auxiliares e declarações de funções;
+      \item código que o desenvolvedor optou por não incluir em um cabeçalho (no caso, seria incluso na seção de Definições);
+      \item pode ser vazia, eliminando a necessidade do segundo símbolo de separação \%\%;
+      \item os comentários em estilo C são permitidos aqui, assim como nas Regras e Definições.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Exemplo Básico - Gramática de Parênteses}
+   Considere a gramática mais simples que usamos nos exemplos: \\
+   A $\rightarrow$ (A) \\
+   A $\rightarrow$ a\\
+   Vamos criar um arquivo de entrada para o \textit{yacc} reconhecer cadeias desta gramática: \\
+   \begin{itemize}
+      \item Só tem três \textit{tokens}: (, a e );
+      \item portanto, vamos fazer a análise léxica manualmente.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Arquivo \textit{src/yacc/parenteses/parenteses.y}}
+   Seções \textbf{Definições} e \textbf{Regras}:
+   \scriptsize
+   \begin{minted}{c}
+%{
+#include <stdio.h>
+#include <ctype.h>
+int yylex(void);
+int yyerror(char *);
+%}
+
+%token LPARAM RPARAM LITTLEA
+
+%%
+
+A : LPARAM A RPARAM { printf("Fazendo redução por A -> (A).\n"); }
+   | LITTLEA        { printf("Fazendo redução por A -> a.\n"); }
+   ;
+
+%%
    \end{minted}
 \end{frame}
 
-\begin{frame}
-   \frametitle{Fundamentos do YACC}
-   \begin{block}{Definições}
-   Marcas, tipos de dados, regras gramaticais e diretivas \#include.
-   \end{block}
+\begin{frame}[fragile]
+   \frametitle{Arquivo \textit{src/yacc/parenteses/parenteses.y}}
+   Seção \textbf{Rotinas Auxiliares}:
+   \scriptsize
+   \begin{minted}{c}
+int main(int argc, char *argv[]) {
+   return yyparse();
+}
 
-   \begin{block}{Regras}
-   Regras da gramática em BNF modificada, com $|$ para alternância, : no lugar de $\to$ e cada regra finalizada por ;.
-   \end{block}
-   
-   \begin{block}{Rotinas Auxiliares}
-   Declarações de procedimentos e unções que não estão em diretivas \#include.
-   \end{block}
+int yylex(void) {
+   int c;
+
+   while ((c = getchar()) == ' ');
+
+   if (c == '(' ) return LPARAM;
+   else if (c == ')') return RPARAM;
+   else if (c == 'a') return LITTLEA;
+   else if (c == '\n') return 0; 
+   return c; 
+}
+
+int yyerror(char *s) {
+   fprintf(stderr, "%s\n", s);
+   return 0;
+}
+   \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Geração da Tabela e Compilação do Analisador}
+   \begin{minted}{bash}
+      $ yacc parenteses.y
+      $ gcc yy.tab.c -o parenteses
+      $ ./parenteses
+      ((a))
+      Fazendo redução por A -> a.
+      Fazendo redução por A -> (A).
+      Fazendo redução por A -> (A).
+   \end{minted}
+   Criamos os \textit{tokens} LPARAM, RPARAM e LITTLEA. Mas para símbolos de um único caracteres, podemos inseri-los entre aspas:
+   \begin{minted}{c}
+   A : '(' A ')'
+     | 'a'
+     ;
+   \end{minted}
+   Para cenários mais complexos (identificadores, números, etc), precisamos criar os \textit{tokens}.
 \end{frame}
 
 \begin{frame}
-   \frametitle{Gramática Exemplo para o YACC}
+   \frametitle{Opções \textit{yacc}}
+   Se quisermos que as funções geradas pelo \textit{yacc} e outras definições (como as marcas para o \textit{lex}) estejam disponíveis em um cabeçalho:
+   \begin{itemize}
+      \item \$ yacc -d parenteses.y
+      \item arquivo \textit{y.tab.h} é criado.
+   \end{itemize}
+   É possível gerar uma descrição textual do autômato LALR(1):
+   \begin{itemize}
+      \item \$ yacc -v parenteses.y
+      \item o arquivo \textit{y.output} é criado;
+      \item os estados contém apenas os itens de \textbf{núcleo}.
+      \item as transições indicam as ações do analisador e o contéudo da tabela IR-PARA.
+   \end{itemize}
+   Compare o conteúdo do arquivo com Figura 5.9 do livro. 
+   
+\end{frame}
+
+\begin{frame}
+   \frametitle{Gramática de Expressões Ariméticas para o YACC}
+   Vamos estudar um exemplo um pouco mais robusto: \\
    $exp\to\textit{exp soma termo}|termo$ \\
    $soma\to+|-$ \\
    $termo\to\textit{termo mult fator}|fator$ \\
    $mult\to *$ \\
-   $fator\to(exp)|\textbf{número}$
+   $fator\to(exp)|\textbf{número}$\\
+   Esta gramática foi usada como exemplo em vários capítulos. 
 \end{frame}
 
 \begin{frame}[fragile]
+   \frametitle{Definições - arquivo \textit{src/yacc/aritmetica/aritmetica.y}}
    \begin{minted}{c}
 %{
 #include <stdio.h>
@@ -682,9 +826,9 @@ int yyerror(char *);
 \end{frame}
 
 \begin{frame}[fragile]
-   \begin{minted}{c}
+   \frametitle{Regras - arquivo \textit{src/yacc/aritmetica/aritmetica.y}}
+   \begin{minted}{perl}
 %%
-
 command : exp { printf("%d\n", $1); }
         ; /* permite imprimir o resultado */
 
@@ -705,6 +849,7 @@ factor : NUMBER { $$ = $1; }
 \end{frame}
 
 \begin{frame}[fragile]
+   \frametitle{Rotinas Auxiliares - \textit{src/yacc/aritmetica/aritmetica.y}}
    \scriptsize
    \begin{minted}{c}
 %%
@@ -734,19 +879,408 @@ int yyerror(char *s) {
 
 \end{frame}
 
-
-\section{Analisador Sintático para TINY em YACC}
 \begin{frame}
-   \frametitle{Analisador Sintático para TINY em YACC}
+   \frametitle{Gramática de Expressões Ariméticas para o YACC}
    \begin{itemize}
-      \item No apêndice, há a listagem do código do analisador sintático para TINY em YACC;
-      \item sua função \textit{yylex} invoca a função \textit{getToken} do analisador léxico do capítulo anterior sobre análise léxica;
-      \item no lugar de operações aritméticas, ele utiliza as ações para construir a árvore abstrata;
-      \item ao final, ele retorna a árvore formada para as próximas fases do compilador.
+      \item O único \textit{token} (NUMBER) é apresentado nas definições;
+      \item os outros terminais são inclusos diretamente na gramática, entre aspas simples (os operadores);
+      \item temos um novo símbolo inicial, \textsf{command}, para deixar a definição do autômato LALR(1) mais organizada;
+      \item as ações fazem uso de \textbf{pseudovariáveis}:
+      \begin{itemize}
+         \item quando ocorre uma redução por uma regra, o \textit{yacc} atribui um \textbf{valor} a cada não-terminal da regra;
+         \item por padrão, esse \textbf{valor} é inteiro, mas pode ser qualquer tipo em C/C++, inclusive ponteiros, estruturas, etc;
+         \item o \textit{yacc} mantém uma \textbf{pilha de valores}, em paralelo com a pilha de análise sintática.
+      \end{itemize}
    \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+   \frametitle{Pseudovariáveis}
+   Considere a regra e ação associada:
+   \begin{minted}{perl}
+   exp : exp '+' termo {$$ = $1 + $3;}
+   \end{minted}
+   \begin{itemize}
+      \item O símbolo \$ indica um valor da pilha de valores;
+      \item o símbolo \$\$ representa o símbolo à esquerda na regra gramatical;
+      \item As variáveis \$1, \$2, \$3 indicam os valores dos símbolos na primeira, segunda e terceira posição, do lado direito;
+      \item no caso, não existe valor para o segundo símbolo, '+, uma marca terminal;
+   \end{itemize}
+   Neste exemplo, estamos afirmando que o valor da expressão que estará pilha após a redução é igual a soma do valor da expressão do lado direito e termo.
+\end{frame}
+
+
+\begin{frame}[fragile]
+   \frametitle{Pseudovariáveis}
+   Considere a regra e ação associada:
+   \begin{minted}{perl}
+   factor : NUMBER {$$ = $1;}
+   \end{minted}
+   \begin{itemize}
+      \item Neste caso, NUMBER é um terminal, com valor (\$1);
+      \item o analisador léxico deve retornar o valor de NUMBER preenchendo a variável \textit{yylval} quando a marca é reconhecida;
+      \item a \textit{yylval} deve ser ma variável global compartilhada entre o análisado léxico e o sintático.
+   \end{itemize}
+   Você pode considerar que \textit{yylval} seria o lexema ou um outro atributo da marca.
+\end{frame}
+
+\begin{frame}
+   \frametitle{Rotinas Auxiliares}
+   \begin{itemize}
+      \item A função \textit{main} ativa \textit{yyparse()}, que retorna 0 em sucesso da análise sintática, 1 caso contrário;
+      \item implicitamente, \textit{yyparse()} invoca uma função \textit{yylex()} que pode ter sido criada pelo \textit{lex};
+      \item no exemplo, \textit{yylex()} foi feita manualmente, vale observar como \textit{yylval} é preenchida;
+      \item temos também a função \textit{yyerror()}, apenas imprimindo uma mensagem de erro.
+   \end{itemize}
+\end{frame}
+
+\begin{frame} [fragile]
+   \frametitle{Gerando o Autômato LALR(1) para Expressões Aritméticas}
+   Arquivo simplicado, sem as ações e rotinas auxiliares:
+   \scriptsize
+   \begin{minted}{perl}
+      %token NUMBER
+      %% 
+      command : exp
+               ; 
+      exp : exp '+' term 
+               | exp '-' term 
+               | term 
+               ;
+      term : term '*' factor 
+               | factor 
+               ;      
+      factor : NUMBER 
+               | '('exp')' 
+               ;  
+   \end{minted}
+   \normalsize
+   \$ yacc -v aritmetica\_simplicada.y \\
+   Teremos o arquivo \textit{y.output} com o autômato LALR(1). Sem as ações e rotinas, fica mais fácil visualizar as transições dos estados.
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Depurando a Execução do Analisador Sintático}
+   Adicionar:
+   \begin{minted}{perl}
+   #define YYDEBUG 1
+   \end{minted}
+   na seção de Definições, e:
+   \begin{minted}{perl}
+   extern int yydebug;
+   yydebug = 1;
+   \end{minted}
+   no começo da função \textit{main}. Agora basta gerar o executável novamente, informando entrada. 
+\end{frame}
+
+\begin{frame}
+   \frametitle{Conflitos e Eliminação de Ambiguidade}
+   \begin{itemize}
+      \item O \textit{yacc} tem regras internas para eliminar ambiguidade;
+      \item o arquivo \textit{y.output} permite verificar se essas regras surtiram efeito;
+      \item conflitos \textbf{carrega-reduz} são resolvidos para opção carregar;
+      \item conflitos \textbf{reduz-reduz} tem a ambiguidade eliminada pela precedência da redução da regra que aparece primeiro no arquivo de especificação.
+   \end{itemize}
+   Considere a gramática visivelmente ambígua: \\
+   A $\rightarrow$ A $|$ B \\
+   A $\rightarrow$ a \\
+   B $\rightarrow$ a \\
+   Gere o arquivo \textit{y.output} dela.
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Precedência de Operadores e Associatividade}
+   \scriptsize
+   \begin{minted}{bash}
+   %{
+   #include <stdio.h>
+   #include <ctype.h>
+   %}
+
+   %token NUMBER
+   
+   %left '+' '-'
+   %left '*'
+
+   %%
+   command : exp { printf("%d\n", $1); }
+           ;
+   exp     : NUMBER { $$ = $1 ;}
+           | exp '+' exp { $$ = $1 + $3 ;}
+           | exp '-' exp { $$ = $1 - $3 ;}           
+           | exp '*' exp { $$ = $1 * $3 ;}           
+           | '(' exp ')' { $$ = $2;}
+           ;
+   %%
+   /* Mesmas funções auxiliares do outro exemplo. */
+   \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Precedência de Operadores e Associatividade}
+   As linhas abaixo:
+   \begin{minted}{bash}
+   %left '+' '-'
+   %left '*'
+   \end{minted}
+   Indicam que os operadores + e - têm a mesma precedência e são associativos à esquerda. O operador * é associativo à esquerda e tem precedência maior que os outros. Os operadores \%right e \%nonassoc também estão disponíveis.
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Tipos de Valores Arbitrários}
+   \begin{itemize}
+      \item No exemplo da gramática de expressões aritmeticas, as pseudovariáveis tem valor inteiro (o padrão);
+      \item mas se quisessemos calcular operações de ponto flutuante?
+      \item ou melhor, se quisessemos construir a árvore sintática durante a derivação?
+      \item podemos redefinir o tipo das pseudovariáveis usando o símbolo YYSTYPE:
+   \end{itemize}
+   \begin{minted}{perl}
+      #define YYSTYPE double
+   \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Tipos de Valores Arbitrários}
+   Considere a gramática: \\
+   exp $\rightarrow$ exp soma termo $|$ termo \\
+   soma $\rightarrow$ + $|$ - \\
+   Podemos ter tipos diferentes para cada não-terminal:
+   \scriptsize
+    \begin{minted}{bash}
+    %token NUMBER
+    %union { double val; char op;}
+    %type <val> exp term factor NUMBER
+    %type <op> addop mulop
+    %%
+    command : exp { printf("%d\n", $1); }
+            ;
+
+    exp     : exp op termo { switch ($2) {
+                              case '+' : $$ = $1 + $3; break;
+                              case '-' : $$ = $1 - $3; break;
+                              }
+                           }
+            | term { $$ = $1; }
+
+   op       : '+' { $$ = '+'; }
+            | '-' { $$ = '-'; }
+            ;
+    \end{minted}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Ações Embutidas}
+   Veja a gramática: \\
+   \textit{decl $\rightarrow$ tipo var-lista} \\
+   \textit{tipo} $\rightarrow$ \textbf{int} $|$ \textbf{float} \\
+   \textit{var-lista $\rightarrow$ var-lista,} \textbf{id} $|$ \textbf{id}
+   \begin{itemize}
+      \item Pela ordem da análise, a redução a \textit{tipo} ocorrerá antes do processamento de \textit{var-lista};
+      \item gostariamos que o valor da pseudovariável de \textit{tipo} (\textbf{int} ou \textbf{float}) pudesse ser propagado para \textit{var-list};
+      \item \$2 = \$1 é proibido!!!
+      \item vamos colocar uma \textbf{ação embutida} para adicionar o valor de \textit{tipo} a uma variável global.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Ações Embutidas}
+   \small
+   \begin{minted}{perl}
+decl : tipo { tipo_corrente = $1; } var-lista
+     ;
+tipo : INT { $$ = TIPO_INTEIRO; }
+     | FLOAT { $$ = TIPO_FLOAT; }
+     ;
+var-lista : var-lista ',' ID  
+               {configuraTipo(tokenString, tipo_corrente);}
+          | ID {configuraTipo(tokenString, tipo_corrente);}
+          ;    
+   \end{minted}
+   O \textit{yacc} interpreta uma ação embutida:
+   \begin{minted}{perl}
+      A : B { /* ação embutida */ } C;
+   \end{minted}
+   como:
+   \begin{minted}{perl}
+      A : B E C;
+      E: {/* ação embutida */}
+   \end{minted}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Resumo YACC}
+   \footnotesize
+   \begin{table}
+      \begin{tabular}{ll}
+      \hline
+Nome Interno & Significado/Uso \\
+      \hline
+y.tab.c & Nome do arquivo de saída \\
+y.tab.h & Arquivo de cabeçalho com definição de marcas \\
+yyparse & Rotina do analisador sintático \\
+yylval & Valor da marca corrente na pilha \\
+yyerror & Função padrão de erro \\
+error & Pseudomarca de erro \\
+yyerrork & Procedimento que reinicia a análise após erro \\
+yychar & Marca à frente que causou erro \\
+YYSTYPE & Tipo do valor na pilha \\
+yydebug & Variável que ativa a depuração \\
+\hline
+Mecanismo & Significado/Uso \\
+\hline
+\%token & Define símbolos para marcas \\
+\%start & Define símbolo inicial \\
+\%union & União YYSTYPE \\
+\%type & Define o tipo diferenciado da união para não-terminal \\
+\%left \%right \%nonassoc & Associatividade e precedência \\
+      \end{tabular}
+   \end{table}
+\end{frame}
+
+\section{Analisador Sintático para TINY em YACC}
+
+\begin{frame}[fragile]
+   \frametitle{Analisador Sintático para TINY em YACC}
+   \begin{itemize}
+      \item No apêndice B, há a listagem do código do analisador sintático para TINY em \textit{yacc} (tiny.y);
+      \item também há uma versão alterada do arquivo globals.h, já que as marcas agora são definidas pelo \textit{yacc};
+      \item iremos construir a árvore sintática, portanto YYSTYPE passa a ser do tipo \textit{TreeNode *};
+      \item \textit{savedName} e \textit{savedLineNo} servem para anotar informações sobre variáveis ao serem atribuídas.    
+   \end{itemize}
+   \begin{columns}
+      \begin{column}{0.4\textwidth}
+      O comportamento geral de cada ação é construir o nó correspondente da árvore.
+      \end{column}
+      \begin{column}{0.6\textwidth}
+         \small
+         \begin{minted}{perl}
+write_stmt : WRITE ID {
+             $$ = newStmtNode(WriteK);
+             $$->child[0] = $2;
+           }
+           ;
+         \end{minted}
+      \end{column}
+   \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Analisador Sintático para TINY em YACC}
+   \begin{columns}
+      \begin{column}{0.4\textwidth}
+      No caso da atribuição, precisamos de uma ação embutida para salvar o nome e a linha da variável.
+      \end{column}
+      \begin{column}{0.6\textwidth}
+         \small
+         \begin{minted}{perl}
+assign_stmt : ID {
+  savedName = copyString(tokenString);
+  savedLineNo = lineno;
+} ASSIGN exp {
+  $$ = newStmtNode(AssignK);
+  $$->child[0] = $4;
+  $$->attr.name = savedName;
+  $$->lineno = savedLineNo;
+}
+;
+         \end{minted}
+      \end{column}
+   \end{columns}
+   Importante lembrar que a função \textit{newStmtNode} está definida em \textit{globals.h}. Este arquivo também precisa ser adaptado para funcionar com o Yacc.
+\end{frame}
+
 \section{Recuperação de Erros}
+
+\begin{frame}
+   \frametitle{Recuperação de Erros}
+   \begin{itemize}
+      \item Como vimos na discussão dos algoritmos LR(0), SLR(1), LR(1) e LALR(1), um analisador sintático ascendente detecta erro quando a análise leva uma entrada na tabela vazia, sem ação;
+      \item entretanto, um objetivo importante é reduzir o tamanho da tabela;
+      \item rapidez na detecção de erros:
+      \begin{enumerate}
+         \item LR(1)
+         \item LALR(1)
+         \item SLR(1)
+         \item LR(0)       
+      \end{enumerate}
+      
+   \end{itemize}
+\end{frame}
+
+\begin{frame}
+   \frametitle{Recuperação de Erros}
+   \begin{columns}
+      \begin{column}{0.4\textwidth}
+         \tiny
+\begin{table}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\textbf{Estado} & \multicolumn{4}{c|}{\textbf{Entrada}} & \textbf{Ir-para} \\
+\hline 
+& (  & a  & )  & \$     & A  \\
+\hline
+0 & s2 & s3 &    &        & 1  \\
+1 &    &    &    & aceita &    \\
+2 & s5 & s6 &    &        & 4  \\
+3 &    &    &    & r2     &    \\
+4 &    &    & s7 &        &    \\
+5 & s5 & s6 &    &        & 8  \\
+6 &    &    & r2 &        &    \\
+7 &    &    &    & r1     &    \\
+8 &    &    & s9 &        &    \\
+9 &    &    & r1 &        &    \\
+\hline
+\end{tabular}
+\caption{LR(1)}
+\end{table}
+      \end{column}
+      \begin{column}{0.6\textwidth}
+         \tiny
+\begin{table}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\textbf{Estado} & \textbf{Ação} & \textbf{Regra} &\multicolumn{3}{c|}{\textbf{Entrada}} & \textbf{Ir-para} \\
+\hline 
+\multicolumn{3}{|c|}{} &(&a&)&A\\
+\hline
+0 & carrega & & 3 & 2 & & 1 \\
+1 & reduz & $A^{'}$$\rightarrow$A &  &  & &  \\
+2 & reduz & A$\rightarrow$a &  &  & &  \\
+3 & carrega & & 3 & 2 & & 4 \\
+4 & carrega & & & & 5 & \\
+5 & reduz & A$\rightarrow$(A)& & & & \\
+\hline
+\end{tabular}
+\caption{LR(0)}
+
+\end{table}
+   \end{column}
+   \end{columns}
+   Comportamento para as entradas:
+   \begin{enumerate}
+      \item (a\$
+      \item a)\$
+   \end{enumerate}
+   Quem retorna erro mais rápido?
+\end{frame}
+
+\begin{frame}
+   \frametitle{Recuperação de Erros}
+   Continuamos com três opções:
+   \begin{enumerate}
+      \item Retirar um estado da pilha;
+      \item retirar sucessivamente marcas da entrada até encontrar uma que possa reiniciar a análise;
+      \item colocar um novo estado na pilha.
+   \end{enumerate}
+   Método geral:
+   \begin{enumerate}
+      \item Retire estados da pilha até encontrar um estado com entradas Ir-Para não vazias;
+      \item se existir uma ação na marca da entrada, reinicie a análise. Dê preferência a carregar em vez de reduzir, e entre as reduções, escolha àquelas com não terminais menos gerais.
+      \item não havendo ação legal para a entrada, avance a entrada até uma ação legal ou \$.
+   \end{enumerate}
+\end{frame}
+
+
 \begin{frame}
    \frametitle{Recuperação de Erros}
    \begin{itemize}
