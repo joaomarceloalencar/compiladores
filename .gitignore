@@ -52,6 +52,7 @@ Mkfile.old
 dkms.conf
 
 # Latex temporary
+*.pdf
 *.aux  
 *.log  
 *.nav  
@@ -60,5 +61,7 @@ dkms.conf
 *.tex~  
 *.toc  
 *.vrb 
-_minted-*/*
-slides/02/02.pdf
+_minted-*
+*.fdb_latexmk
+*.fls
+*.synctex.gz
