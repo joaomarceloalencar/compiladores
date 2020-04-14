@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <ctype.h>
 
-#define YYDEBUG 1
+#define YYDEBUG 1 
 
 int yylex(void);
 int yyerror(char *);
@@ -31,8 +31,10 @@ factor : NUMBER { $$ = $1; }
 %%
 
 int main() {
+   
    extern int yydebug;
    yydebug = 1;
+   
    return yyparse();
 }
 
