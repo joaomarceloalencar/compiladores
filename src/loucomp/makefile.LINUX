@@ -52,6 +52,5 @@ clean:
 tm.out: tm.c
 	$(CC) $(CFLAGS) tm.c -o tm.out
 
-
 all: tiny.out tm.out
 

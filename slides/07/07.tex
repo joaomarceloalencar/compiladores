@@ -787,10 +787,155 @@ end;
    \end{itemize}
 \end{frame}
 
+\begin{frame}[fragile]
+   \frametitle{Atributos como Parâmetros e Valores de Retorno}
+   \scriptsize
+   \begin{minted}{pascal}
+function AvalComBase(T: no-arvore; base:inteiro): inteiro;
+var temp, temp2: inteiro:
+begin
+      case no-tipo de T of
+      base-num:
+         temp := AvalComBase(filho a direita de T);
+         return AvalComBase(filho a esquerda de T, temp);
+      num:
+         temp := AvalComBase(filho a esquerda de T, base);
+         if filho a direita de T nao nil then
+            temp2 := AvalComBase(filho a direita de T, base);
+            if temp <> erro and temp2 <> erro then 
+               return base * temp +  temp2;
+            else return erro;
+         else return temp;
+      basecar:
+         if filho de T = o then return 9
+         else return 10;
+      digito:
+         if base = 8 and filho de T = 8 ou 9 then return erro
+         else return numval(filho de T);
+      end case;
+end AvalComBase;
+   \end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Atributos como Parâmetros e Valores de Retorno}
+   \begin{itemize}
+      \item Funciona somente porque tanto \textit{base} quanto \textit{val} podem ser representados por inteiros;
+      \item a primeira ativação seria \textit{AvalComBase(nó-raiz, 0);}
+      \item uma possibilidade seria dividir a função em três.
+   \end{itemize}
+   \small
+   \begin{minted}{pascal}
+function AvalBaseNum(T: no-arvore): inteiro;
+(* ativado apenas para a raiz *)            
+begin
+   return AvalNum(filho esquerdo de T, 
+                  AvalBase(filho direito de T));
+end AvalBaseNum
+function AvalBase(T: no-arvore): inteiro;
+(* ativado apenas para basecar *)            
+begin
+   if filho de T igual ao then return 8
+   else return 10;
+end AvalBase
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Atributos como Parâmetros e Valores de Retorno}
+   \scriptsize
+   \begin{minted}{pascal}
+function AvalNum(T: no-arvore): inteiro;
+var temp, temp2: inteiro:
+begin
+      case no-tipo de T of
+      num:
+         temp := AvalComBase(filho a esquerda de T, base);
+         if filho a direita de T nao nil then
+            temp2 := AvalComBase(filho a direita de T, base);
+            if temp <> erro and temp2 <> erro then 
+               return base * temp +  temp2;
+            else return erro;
+         else return temp;
+      digito:
+         if base = 8 and filho de T = 8 ou 9 then return erro
+         else return numval(filho de T);
+      end case;
+end AvalComBase;
+   \end{minted}
+   \normalsize
+   O que essa separação quer mostrar é que o desenvolvedor do compilador tem liberdade para refatorar o código.
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Estruturas de Dados Externas}
+   \begin{itemize}
+      \item No exemplo anterior, seria realmente necessário a cópia de \textit{base} em vários argumentos?
+      \item podemos supor a existência de estruturas de dados \textit{externas}:
+      \begin{itemize}
+         \item Variáveis globais;
+         \item \textbf{tabelas}.
+      \end{itemize}
+   \end{itemize}
+   \begin{minted}{pascal}
+base-num:
+      AjustaBase(filho direito de T);
+      return AvalComBase(filho esquerdo de T);
+   \end{minted}
+   \begin{itemize}
+      \item \textit{AjustaBase} seria um procedimento externo que configura uma variável global;
+      \item todos os outros casos acessam essa variável;
+      \item as regras semânticas podem ser atualizadas para refletir a variável global.
+   \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Estruturas de Dados Externas}
+   Considerando a gramática de declaração de tipos, podemos ter o procedimento: \\
+   \footnotesize
+   \begin{minted}{pascal}
+procedure inserir (nome: cadeia de caracteres; dtipo: tipo);
+   \end{minted}
+   \begin{table}
+      \begin{tabular}{cc}
+      Regra Gramatical & Regras Semânticas \\
+      \hline 
+      \textit{decl} $\rightarrow$ \textit{tipo var-lista} &  \\    
+      \textit{tipo} $\rightarrow$ \textbf{int} & $dtipo = inteiro$ \\
+      \textit{tipo} $\rightarrow$ \textbf{float} & $dtipo = real$ \\
+      ${\text{var-lista}}_{1} \rightarrow \text{\textbf{id,}} {\text{var-lista}}_{2}$ & \textit{inserir(\textbf{id}.nome, dtipo)} \\
+      $\text{var-lista} \rightarrow \text{\textbf{id}}$ & \textit{inserir(\textbf{id}.nome, dtipo)} \\
+      \end{tabular}   
+   \end{table}  
+   \normalsize 
+   Há uma tabela que armazena o mapeamento do nome ao tipo declarado.
+\end{frame}
+
+\begin{frame}[fragile]
+   \frametitle{Estruturas de Dados Externas}
+   \begin{minted}{pascal}
+procedure AvalTipo (T: no-arvore);
+begin
+   case tipo-no de T of
+   decl:
+      AvalTipo(tipo filho de T);
+      AvalTipo(var-lista filha de T);
+   tipo:
+      if filho de T = int then dtipo := inteiro
+      else dtipo := real;
+   var-lista:
+      inserir(nome do primeiro filho de T, dtipo)
+      if terceiro filho de T nao nil then
+         AvalTipo(terceiro filho de T);
+   end case;
+end AvalTipo;
+   \end{minted}
+ \end{frame}
+
 \begin{frame}
    \frametitle{Computação de Atributos Durante a Análise Semântica}
    \begin{itemize}
-      \item Uma questão fundamental quantos dos atributos já podem ser calculados durante a análise sintática;
+      \item Uma questão fundamental é quanto dos atributos já podem ser calculados durante a análise sintática;
       \item como a maioria dos algoritmos de análise sintática processa a entrada da esquerda para a direita, o cálculo de atributos também segue essa direção;
       \item uma gramática de atributos na qual cada atributo, sintetizado ou herdado, pode ser calculado através de outros atributos que só ocorrem à esquerda na regra gramatical é dita \textbf{L-atribuída}.
       \item podemos acrescentar uma \textbf{pilha de valores} e explicitar as \textbf{ações semânticas} durante a análise LR;
