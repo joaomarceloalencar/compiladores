@@ -73,7 +73,8 @@ void st_insert(char * name, int lineno, int loc) {
       l->memloc = loc;
       l->lines->next = NULL;
       l->next = hashTable[h];
-      hashTable[h] = l; }
+      hashTable[h] = l; 
+   }
    else { /* found in table, so just add line number */
       LineList t = l->lines;
       while (t->next != NULL) t = t->next;
