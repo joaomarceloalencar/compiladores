@@ -16,22 +16,7 @@ function DFA(states::Vector{Int64}, alphabet::Vector{Char},
     DFA(Set(states), Set(alphabet), transition, start, Set(accepted))
 end    
 
-struct NFA <: Automata
-    S::Set{Int}
-    Σ::Set{Char}
-    δ::Dict{Tuple{Int, Char}, Set{Int}}
-    S0::Int
-    SA::Set{Int}
-end
-
-function NFA(states::Vector{Int64}, alphabet::Vector{Char}, 
-    transition::Dict{Tuple{Int64, Char}, Int64}, 
-    start::Int64, accepted::Vector{Int64})
-    push!(alphabet, 'ϵ')
-    DFA(Set(states), Set(alphabet), transition, start, Set(accepted))
-end 
-
-function recognize(str::String, aut::Automata)
+function recognize(str::String, aut::DFA)
     state = aut.S0
     str_size = length(str)
     processed = 0 
@@ -65,7 +50,105 @@ function recognize(str::String, aut::Automata)
         end
         false 
     end
+end
+
+struct NFA <: Automata
+    S::Set{Int}
+    Σ::Set{Char}
+    δ::Dict{Tuple{Int, Char}, Set{Int}}
+    S0::Int
+    SA::Set{Int}
+end
+
+function NFA(states::Vector{Int64}, alphabet::Vector{Char}, 
+    transition::Dict{Tuple{Int64, Char}, Set{Int64}}, 
+    start::Int64, accepted::Vector{Int64})
+    push!(alphabet, 'ϵ')
+    NFA(Set(states), Set(alphabet), transition, start, Set(accepted))
 end 
+
+
+function ϵ_closure(states::Set{Int}, aut::NFA)
+    new_closure = Set{Int}()
+    union!(new_closure, states)
+    for transition in keys(aut.δ)
+        transition_state = transition[1]
+        transition_symbol = transition[2]
+        if (transition_state in states && transition_symbol == 'ϵ')
+            union!(new_closure, aut.δ[transition])
+        end
+    end
+
+    if new_closure == states
+        return new_closure
+    else
+        return ϵ_closure(new_closure, aut)
+    end
+
+end
+
+function recognize(str::String, aut::NFA)
+    # state indicates the current state of the automata. Since this is a NFA, state is a set of states.
+    state = ϵ_closure(Set(aut.S0), aut)
+    str_size = length(str)
+
+    # processed indicates how much of the input has been read.
+    processed = 0 
+
+    for symbol in str
+        if !(symbol in aut.Σ)
+            err = DomainError(symbol, "String contains symbol that does not belong to automata alphabet.")
+            throw(err)
+            false
+        else
+            new_state = Set()
+            reachable_states = Set()
+            change = false
+
+            for s in state
+                reachable_states = union!(reachable_states, ϵ_closure(Set(s), aut))
+            end
+
+            for transition in keys(aut.δ)
+                transition_state = transition[1]
+                transition_symbol = transition[2]
+
+                if (transition_state in reachable_states && transition_symbol == symbol)
+                    union!(new_state, aut.δ[transition])
+                    change = true
+                    processed += 1
+                end
+
+                println("Current State: ", state, ", ", 
+                        "Current Symbol: " , symbol, ", ", 
+                        "Transition: ", transition, ", ",
+                        "New State:", new_state)
+            end 
+            if change
+                state = new_state
+            else
+                state =  ϵ_closure(state, aut)
+            end   
+        end
+    end
+    isFinal = false
+    for final in aut.SA
+        if final in state
+            isFinal = true
+            break
+        end
+    end
+    if (isFinal && processed == str_size)
+        true
+    else
+        if processed < str_size
+            err = DomainError(processed, raw"There are still characters left and no transition to follow.")
+            throw(err)
+        end
+        false 
+    end
+end
+ 
 
 # Autômatos de testes
 # DFA - a*(b|c)
@@ -86,3 +169,30 @@ funcao_transicao = Dict((0,'a')=>1,
 inicial = 0
 aceitacao = [1,2,3]
 d2 = DFA(estados, alfabeto, funcao_transicao, inicial, aceitacao)
+
+# NFA - (a|b)c
+estados = [0,1,2,3,4]
+alfabeto = ['a', 'b', 'c']
+funcao_transicao = Dict((0,'a')=>Set([2]), (0,'ϵ')=>Set([1]), 
+                        (1,'b')=>Set([3]), 
+                        (2,'c')=>Set([4]),
+                        (3,'c')=>Set([4]))
+inicial = 0
+aceitacao = [4]
+n1 = NFA(estados, alfabeto, funcao_transicao, inicial, aceitacao)
+
+# NFA - (a|b)*c
+estados = [0,1,2,3,4,5,6,7,8,9]
+alfabeto = ['a', 'b', 'c']
+funcao_transicao = Dict((0,'a')=>Set([1]),  
+                        (1,'ϵ')=>Set([2]), 
+                        (2,'ϵ')=>Set([3,9]),
+                        (3,'ϵ')=>Set([4,6]),
+                        (4,'b')=>Set([5]),
+                        (5,'ϵ')=>Set([8]),
+                        (6,'c')=>Set([7]),
+                        (7,'ϵ')=>Set([8]),
+                        (8,'ϵ')=>Set([3,9]))
+inicial = 0
+aceitacao = [9]
+n2 = NFA(estados, alfabeto, funcao_transicao, inicial, aceitacao)
