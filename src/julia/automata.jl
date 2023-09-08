@@ -89,63 +89,57 @@ end
 
 function recognize(str::String, aut::NFA)
     # state indicates the current state of the automata. Since this is a NFA, state is a set of states.
-    state = ϵ_closure(Set(aut.S0), aut)
-    str_size = length(str)
-
+    states = ϵ_closure(Set([aut.S0]), aut)
     # processed indicates how much of the input has been read.
     processed = 0 
+    str_size = length(str)
 
-    for symbol in str
+    for symbol in str   
         if !(symbol in aut.Σ)
             err = DomainError(symbol, "String contains symbol that does not belong to automata alphabet.")
             throw(err)
             false
         else
-            new_state = Set()
-            reachable_states = Set()
-            change = false
-
-            for s in state
-                reachable_states = union!(reachable_states, ϵ_closure(Set(s), aut))
-            end
-
             for transition in keys(aut.δ)
                 transition_state = transition[1]
                 transition_symbol = transition[2]
 
-                if (transition_state in reachable_states && transition_symbol == symbol)
-                    union!(new_state, aut.δ[transition])
-                    change = true
-                    processed += 1
-                end
+                println("Current States: ", states, ", ", 
+                "Current Symbol: " , symbol, ", ", 
+                "Transition: ", transition, "=>", aut.δ[transition])
 
-                println("Current State: ", state, ", ", 
-                        "Current Symbol: " , symbol, ", ", 
-                        "Transition: ", transition, ", ",
-                        "New State:", new_state)
+                if (transition_state in states && transition_symbol == symbol)
+                    delete!(states, transition_state)
+                    union!(states, ϵ_closure(aut.δ[transition], aut))
+                    processed += 1
+                    println("New States: ", states)
+                end
             end 
-            if change
-                state = new_state
-            else
-                state =  ϵ_closure(state, aut)
-            end   
         end
     end
     isFinal = false
+    reachable_states = ϵ_closure(states, aut)
+    println("Reachable States: ", reachable_states)
     for final in aut.SA
-        if final in state
+        if final in reachable_states
             isFinal = true
             break
         end
     end
-    if (isFinal && processed == str_size)
+    println("Is Final: ", isFinal)
+    println("Processed: ", processed)	
+    if (isFinal && processed >= str_size)
         true
     else
+        if !(isFinal)
+            err = DomainError(states, "Final state not reached.")
+            throw(err)
+        end
         if processed < str_size
             err = DomainError(processed, raw"There are still characters left and no transition to follow.")
             throw(err)
         end
-        false 
+        false
     end
 end
  
@@ -196,3 +190,14 @@ funcao_transicao = Dict((0,'a')=>Set([1]),
 inicial = 0
 aceitacao = [9]
 n2 = NFA(estados, alfabeto, funcao_transicao, inicial, aceitacao)
+
+# NFA - aa*b
+estados = [0,1,2,3]
+alfabeto = ['a', 'b']
+funcao_transicao = Dict((0,'a')=>Set([0]),
+                        (0,'ϵ')=>Set([1]),
+                        (1,'a')=>Set([2]),
+                        (2,'b')=>Set([3]))
+inicial = 0
+aceitacao = [3]
+n3 = NFA(estados, alfabeto, funcao_transicao, inicial, aceitacao)
