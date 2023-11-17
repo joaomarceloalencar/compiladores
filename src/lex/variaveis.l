@@ -10,6 +10,7 @@ letra [A-Za-z]
 
 %%
 
+^#                          { printf("Ignorando Linha comentário: %s", yytext);}
 {letra}({letra}|{digito})*  { return ID;}
 [1-9][0-9]*                 { return NUM;}
 [ \t\n]                     { ; }
