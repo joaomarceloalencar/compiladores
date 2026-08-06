@@ -6,6 +6,18 @@ Material da disciplina de Compiladores.
 **Campus da UFC em Quixadá**
 **Período:** 10/08/2026 a 11/12/2026 — segundas e quartas-feiras (33 encontros)
 
+## Organização do Repositório
+
+O material de cada oferta da disciplina fica em um *branch* próprio, nomeado pelo
+semestre. O material **desta oferta está no branch `20262`**, que é atualizado ao longo
+do semestre:
+
+```bash
+git clone https://github.com/joaomarceloalencar/compiladores.git
+cd compiladores
+git checkout 20262
+```
+
 ## Livro Texto
 
 **LOUDEN, Kenneth C.** *Compiladores: Princípios e Práticas.* São Paulo: Thomson Learning, 2004.
