@@ -1,0 +1,29 @@
+{ Programa de exemplo na
+  linguagem TINY - conta os passos
+  da sequencia de Collatz
+
+  A conjectura de Collatz afirma que, partindo
+  de qualquer inteiro positivo n, a sequencia
+    n par   -> n / 2
+    n impar -> 3 * n + 1
+  sempre alcanca o valor 1.
+
+  Como TINY nao possui operador de resto, a
+  paridade e testada com: n - (n / 2) * 2 = 0
+}
+read n; { entrada de um inteiro positivo }
+if 0 < n then { nao calcula se n <= 0 }
+  passos := 0;
+  if 1 < n then { se n = 1 a sequencia ja terminou }
+    repeat
+      metade := n / 2;
+      if n - metade * 2 = 0 then
+        n := metade { n e par }
+      else
+        n := 3 * n + 1 { n e impar }
+      end;
+      passos := passos + 1
+    until n = 1
+  end;
+  write passos { saida do numero de passos ate chegar a 1 }
+end
