@@ -3,12 +3,12 @@ letra [A-Za-z]
 
 %{
    int count;
-
 %}
 
 %%
-
-{letra}({letra}|{digito})* {count ++;} 
+"{".*"}" { printf("Ignorando comentário.\n"); }
+"read"   { printf("Ignorando palavra reservada read.\n"); }
+{letra}({letra}|{digito})* {count++;} 
 %%
 
 int yywrap(void) {
