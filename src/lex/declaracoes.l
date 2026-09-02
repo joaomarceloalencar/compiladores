@@ -11,9 +11,10 @@ letra [A-Za-z]
 
 %%
 
-{letra}({letra}|{digito})*  { return ID;}
-[1-9][0-9]*                 { return NUMINT;}
-[ \t\n]                     { ; }
+{letra}({letra}|{digito})*               { return ID;}
+[1-9][0-9]*                              { return NUMINT;}
+[1-9][0-9]*\.[0-9]+                      { return NUMFLOAT;}
+[ \t\n]                                  { ; }
 
 %%
 
@@ -28,7 +29,9 @@ int main(int argc, char *argv[]) {
       if (token == ID) {
          printf("Identificador: %s\n", yytext);
       } else if (token == NUMINT) {
-         printf("Número: %s\n", yytext);
+         printf("Número Inteiro: %s\n", yytext);
+      } else if (token == NUMFLOAT) {
+         printf("Número Ponto Flutuante: %s\n", yytext);
       }
       token = yylex();
    }

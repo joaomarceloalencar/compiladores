@@ -55,6 +55,10 @@ whitespace  [ \t]+
 
 %%
 
+int yywrap(void) {
+   return 1;
+}
+
 TokenType getToken(void)
 { static int firstTime = TRUE;
   TokenType currentToken;
